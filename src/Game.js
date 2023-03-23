@@ -31,6 +31,7 @@ class Game extends Component {
     };
     this.roll = this.roll.bind(this);
     this.doScore = this.doScore.bind(this);
+    this.toggleLocked = this.toggleLocked.bind(this)
   }
 
   roll(evt) {
@@ -45,14 +46,19 @@ class Game extends Component {
   }
 
   toggleLocked(idx) {
+    // 
+    function toggleArrayItem(arr, index) {
+      arr[index] = !arr[index];
+      return arr
+    }
+
+    
     // toggle whether idx is in locked or not
     this.setState(st => ({
-      locked: [
-        ...st.locked.slice(0, idx),
-        !st.locked[idx],
-        ...st.locked.slice(idx + 1)
-      ]
+      locked:[...toggleArrayItem(st.locked, idx)]
     }));
+
+    // this.setState({locked: []})
   }
 
   doScore(rulename, ruleFn) {
@@ -75,12 +81,12 @@ class Game extends Component {
             <Dice
               dice={this.state.dice}
               locked={this.state.locked}
-              handleClick={this.toggleLocked}
+              toggleLocked={this.toggleLocked}
             />
             <div className='Game-button-wrapper'>
               <button
-                className='Game-reroll'
-                disabled={this.state.locked.every(x => x)}
+                className= 'Game-reroll'
+                disabled= {this.state.locked.every(x => x) || this.state.rollsLeft <= 0 }
                 onClick={this.roll}
               >
                 {this.state.rollsLeft} Rerolls Left
