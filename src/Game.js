@@ -46,29 +46,26 @@ class Game extends Component {
   }
 
   toggleLocked(idx) {
-    // 
     function toggleArrayItem(arr, index) {
       arr[index] = !arr[index];
       return arr
     }
-
-    
     // toggle whether idx is in locked or not
     this.setState(st => ({
       locked:[...toggleArrayItem(st.locked, idx)]
     }));
-
-    // this.setState({locked: []})
   }
 
   doScore(rulename, ruleFn) {
     // evaluate this ruleFn with the dice and score this rulename
-    this.setState(st => ({
-      scores: { ...st.scores, [rulename]: ruleFn(this.state.dice) },
-      rollsLeft: NUM_ROLLS,
-      locked: Array(NUM_DICE).fill(false)
-    }));
+    if (this.state.scores[rulename] === undefined) {
+      this.setState(st => ({
+        scores: { ...st.scores, [rulename]: ruleFn(this.state.dice) },
+        rollsLeft: NUM_ROLLS,
+        locked: Array(NUM_DICE).fill(false)
+      }));
     this.roll();
+    }
   }
 
   render() {
@@ -76,7 +73,6 @@ class Game extends Component {
       <div className='Game'>
         <header className='Game-header'>
           <h1 className='App-title'>Yahtzee!</h1>
-
           <section className='Game-dice-section'>
             <Dice
               dice={this.state.dice}
